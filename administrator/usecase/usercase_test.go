@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// 測試範例，其他自己變通
+// 測試範例，其他自己舉一反三
 func Test_GetInfo(t *testing.T) {
 	// 1a
 	administratorRepository := administratorUseRepo.Repository{}
