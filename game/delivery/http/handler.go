@@ -23,7 +23,7 @@ func NewGameHandler(r *gin.Engine, a game.Usecase) {
 	r.GET("/gamelink", handler.GetGameLink)
 }
 
-func checkToken(c *gin.Context) error {
+func (_a *GameHandler) checkToken(c *gin.Context) error {
 	// 先取get參數
 	// agent table的UserName、Token
 	agentName := c.Query("agentname")
@@ -37,15 +37,24 @@ func checkToken(c *gin.Context) error {
 		// 寫log
 		return errors.New("")
 	}
+	haveToken, err := _a.GameUsecase.CheckToken(agentName, token)
+	if err != nil {
+		return err
+	}
+
+	if !haveToken {
+		return errors.New("沒有這個Agent")
+	}
 
 	return nil
 }
 
-func (a *GameHandler) GetGameLink(c *gin.Context) {
-	err := checkToken(c)
+func (_a *GameHandler) GetGameLink(c *gin.Context) {
+	err := _a.checkToken(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error_code": 111, "error_message": "Token驗證失敗", "execution_time": 0, "data": ""})
 	}
+
 	// 先取get參數
 	gameID := c.Query("gameid")
 	if gameID == "" {
